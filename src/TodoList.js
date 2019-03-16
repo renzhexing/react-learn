@@ -1,54 +1,75 @@
 import React, { Component, Fragment } from "react";
 
-class TodoList extends Component {
+import TodoItem from "./TodoItem";
 
+import "./style.css";
+class TodoList extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      inputValue: '',
+      inputValue: "",
       list: []
-    }
+    };
+
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.drawItem = this.drawItem.bind(this);
   }
 
   handleChange(e) {
-    this.setState({
-      inputValue: e.target.value
-    })
+    const value = e.target.value;
+    this.setState(() => ({
+      inputValue: value
+    }));
   }
 
   handleSubmit() {
-    this.setState({
-      list: [...this.state.list, this.state.inputValue],
-      inputValue: ''
-    })
+    this.setState(prevState => {
+      return {
+        list: [...prevState.list, prevState.inputValue],
+        inputValue: ""
+      };
+    });
   }
 
   handleDelete(index) {
-    let list = [...this.state.list]
-    list.splice(index,1)
-    this.setState({
-      list: list
-    })
+    this.setState(prevState => {
+      let list = [...prevState.list];
+      list.splice(index, 1);
+      return {
+        list: list
+      };
+    });
   }
 
+  drawItem() {
+    return this.state.list.map((item, index) => {
+      return (
+        <TodoItem
+          key={index}
+          content={item}
+          index={index}
+          deleteItem={this.handleDelete}
+        />
+      );
+    });
+  }
   render() {
     return (
       <Fragment>
         <div>
-          <input 
+          <label htmlFor="forValue">input content</label>
+          <input
+            id="forValue"
+            className="input"
             value={this.state.inputValue}
-            onChange={this.handleChange.bind(this)}
+            onChange={this.handleChange}
           />
-          <button onClick={this.handleSubmit.bind(this)}>提交</button>
+          <button onClick={this.handleSubmit}>提交</button>
         </div>
-        <ul>
-          {
-            this.state.list.map((item,index)=>{
-              return <li key={index} onClick={this.handleDelete.bind(this,index)}>{item}</li>
-            })
-          }
-        </ul>
+        <ul>{this.drawItem()}</ul>
       </Fragment>
     );
   }
