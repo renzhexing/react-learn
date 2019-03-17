@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import PropTypes from 'prop-types';
+
 export default class TodoItem extends Component {
 
     constructor(props) {
@@ -8,11 +10,22 @@ export default class TodoItem extends Component {
     };
 
     handleDelete() {
-        const { index } = this.props;
-        this.props.deleteItem(this.props.index)
+        const { index, deleteItem } = this.props;
+        deleteItem(index)
     }
     render() {
-        const { content } = this.props;
-        return <div onClick={this.handleDelete}>{ content }</div>
+        const { content, test } = this.props;
+        return <div onClick={this.handleDelete}>{ test }--{ content }</div>
     }
+}
+
+TodoItem.defaultProps = {
+    test: 'react'
+}
+
+TodoItem.propTypes = {
+    test: PropTypes.string.isRequired,
+    content: PropTypes.string,
+    index: PropTypes.number,
+    deleteItem: PropTypes.func
 }
