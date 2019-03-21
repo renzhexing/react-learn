@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-
+import axios from 'axios';
 import TodoItem from "./TodoItem";
 
 import "./style.css";
@@ -16,6 +16,16 @@ class TodoList extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.drawItem = this.drawItem.bind(this);
+  }
+
+  componentDidMount() {
+    axios.get('/api/todolist')
+    .then(res=>{
+      console.log(res)
+    })
+    .catch(error=>{
+      console.log(error,'异常')
+    })
   }
 
   handleChange(e) {
