@@ -3,6 +3,8 @@ import React, { Component, Fragment } from "react";
 import store from "./store";
 import { Input, Button, List } from "antd";
 
+import { getChangeInputValue, getAddTodoItem, getDeleteItem } from './store/actionCreator';
+
 class Lists extends Component {
   constructor(props) {
     super(props);
@@ -11,6 +13,7 @@ class Lists extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handStoreChange = this.handStoreChange.bind(this)
     this.handleBtnClick = this.handleBtnClick.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
 
     store.subscribe(this.handStoreChange)
   }
@@ -27,11 +30,7 @@ class Lists extends Component {
   }
 
   handleInputChange(e) {
-    console.log(e.target.value)
-    const action = {
-      type: 'change_input_value',
-      value: e.target.value
-    };
+    const action = getChangeInputValue(e.target.value);
     store.dispatch(action)
   };
 
@@ -40,11 +39,14 @@ class Lists extends Component {
   };
 
   handleBtnClick() {
-    const action = {
-      type: 'add_todo_item'
-    }
-
+    const action = getAddTodoItem();
     store.dispatch(action);
+  };
+
+  handleDelete(index) {
+    const action = getDeleteItem(index)
+
+    store.dispatch(action)
   }
 
   render() {
@@ -60,11 +62,9 @@ class Lists extends Component {
           onClick = {this.handleBtnClick}>提交</Button>
         </div>
         <List
-          header={<div>Header</div>}
-          footer={<div>Footer</div>}
           bordered
           dataSource={list}
-          renderItem={item => <List.Item>{item}</List.Item>}
+          renderItem={(item,index) => <List.Item onClick={e=>this.handleDelete(index)}>{item}</List.Item>}
         />
       </Fragment>
     );
